@@ -1,0 +1,12 @@
+{
+  "name": "rutsotp",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.mjs",
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  }
+}
