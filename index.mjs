@@ -1,6 +1,6 @@
 import {createHmac} from 'node:crypto';
 
-export const getTimex = (timenow)=>{
+const getTimex = (timenow)=>{
 	var [date, month, year] =[timenow.getDate(), timenow.getMonth()+1, timenow.getFullYear()];
 	var [hour, minute, second] = [timenow.getHours(), timenow.getMinutes(), timenow.getSeconds()];
 	if(month < 10){
@@ -21,20 +21,20 @@ export const getTimex = (timenow)=>{
 	return year+"-"+month+"-"+date+"T"+hour+":"+minute+":"+second;
 }
 
-export const OTP = (secret, size)=>{
+const OTP = (secret, size)=>{
 	return OTPx(secret, size, new Date());
 }
 
-export const OTPx = (secret, size, timenow)=>{
+const OTPx = (secret, size, timenow)=>{
 	const hmac = createHmac('sha512', getTimex(timenow));
 	return hmac.update(secret).digest('hex').slice(0, size*2);
 }
 
-export const CheckOTP = (otp, secret, size)=>{
+const CheckOTP = (otp, secret, size)=>{
 	return CheckOTPx(otp, secret, size, 5);
 }
 
-export const CheckOTPx = (otp, secret, size, time1)=>{
+const CheckOTPx = (otp, secret, size, time1)=>{
 	const timenow = new Date();
 	for(let i = 0; i <= time1; i++){
 		let otpx = OTPx(secret, size, new Date(timenow.getTime()-(i*1000)));
@@ -50,3 +50,5 @@ export const CheckOTPx = (otp, secret, size, time1)=>{
 	}
 	return false;
 }
+
+export { getTimex, OTP, OTPx, CheckOTP, CheckOTPx }
