@@ -1,4 +1,4 @@
-import {createHmac} from 'crypto';
+import {createHmac} from 'node:crypto';
 
 export const getTimex = (timenow)=>{
 	var [date, month, year] =[timenow.getDate(), timenow.getMonth()+1, timenow.getFullYear()];
