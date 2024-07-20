@@ -1,4 +1,4 @@
-const getTimex = async (timenow) => {
+export const getTimex = async (timenow) => {
   return new Promise(async (resolve) => {
     var [date, month, year] = [
       timenow.getDate(),
@@ -41,17 +41,17 @@ const getTimex = async (timenow) => {
   });
 };
 
-const Delay = async (ms) => {
+export const Delay = async (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const BufferToHex = async (buffer) => {
+export const BufferToHex = async (buffer) => {
   return Array.from(new Uint8Array(buffer))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 };
 
-const hmacKey = async (key) => {
+export const hmacKey = async (key) => {
   const enc = new TextEncoder();
   const keyEnc = enc.encode(key);
 
@@ -67,11 +67,11 @@ const hmacKey = async (key) => {
   );
 };
 
-const OTP = async (secret) => {
+export const OTP = async (secret) => {
   return await OTPx(secret, new Date());
 };
 
-const OTPx = async (secret, timenow) => {
+export const OTPx = async (secret, timenow) => {
   return new Promise(async (resolve) => {
     const secretKey = await hmacKey(secret);
     const dataEnc = new TextEncoder().encode(await getTimex(timenow));
@@ -81,11 +81,11 @@ const OTPx = async (secret, timenow) => {
   });
 };
 
-const CheckOTP = async (otp, secret) => {
+export const CheckOTP = async (otp, secret) => {
   return await CheckOTPx(otp, secret, 5);
 };
 
-const CheckOTPx = async (otp, secret, time1) => {
+export const CheckOTPx = async (otp, secret, time1) => {
   return new Promise(async (resolve) => {
     const timenow = new Date();
     for (let i = 0; i <= time1; i++) {
@@ -104,13 +104,3 @@ const CheckOTPx = async (otp, secret, time1) => {
   });
 };
 
-export {
-  getTimex,
-  hmacKey,
-  BufferToHex,
-  Delay,
-  OTP,
-  OTPx,
-  CheckOTP,
-  CheckOTPx,
-};
