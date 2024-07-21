@@ -46,25 +46,33 @@ export const Delay = async (ms) => {
 };
 
 export const BufferToHex = async (buffer) => {
-  return Array.from(new Uint8Array(buffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+  return new Promise(async (resolve) => {
+    resolve(
+      Array.from(new Uint8Array(buffer))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join(""),
+    );
+  });
 };
 
 export const hmacKey = async (key) => {
-  const enc = new TextEncoder();
-  const keyEnc = enc.encode(key);
+  return new Promise(async (resolve) => {
+    const enc = new TextEncoder();
+    const keyEnc = enc.encode(key);
 
-  return await crypto.subtle.importKey(
-    "raw",
-    keyEnc,
-    {
-      name: "HMAC",
-      hash: "SHA-256",
-    },
-    true,
-    ["sign", "verify"],
-  );
+    resolve(
+      await crypto.subtle.importKey(
+        "raw",
+        keyEnc,
+        {
+          name: "HMAC",
+          hash: "SHA-256",
+        },
+        true,
+        ["sign", "verify"],
+      ),
+    );
+  });
 };
 
 export const OTP = async (secret) => {
@@ -76,7 +84,7 @@ export const OTPx = async (secret, timenow) => {
     const secretKey = await hmacKey(secret);
     const dataEnc = new TextEncoder().encode(await getTimex(timenow));
     let output = await crypto.subtle.sign("HMAC", secretKey, dataEnc);
-    let outputHex = BufferToHex(output);
+    let outputHex = await BufferToHex(output);
     resolve(outputHex);
   });
 };
@@ -103,4 +111,3 @@ export const CheckOTPx = async (otp, secret, time1) => {
     resolve(false);
   });
 };
-
