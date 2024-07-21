@@ -95,7 +95,7 @@ export const CheckOTP = async (otp, secrets) => {
 
 export const CheckOTPs = async (otp, secrets, time1) => {
   return new Promise(async (resolve) => {
-    for (s of secrets) {
+    for (let s of secrets) {
       if (await CheckOTPx(otp, s, time1)) {
         resolve(true);
       }
