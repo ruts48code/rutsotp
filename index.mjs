@@ -1,15 +1,14 @@
 export const getTimex = async (timenow) => {
   return new Promise(async (resolve) => {
-    var [date, month, year] = [
+    var [date, month, year, hour, minute, second] = [
       timenow.getDate(),
       timenow.getMonth() + 1,
       timenow.getFullYear(),
-    ];
-    var [hour, minute, second] = [
       timenow.getHours(),
       timenow.getMinutes(),
       timenow.getSeconds(),
     ];
+
     if (month < 10) {
       month = "0" + month;
     }
@@ -57,13 +56,10 @@ export const BufferToHex = async (buffer) => {
 
 export const hmacKey = async (key) => {
   return new Promise(async (resolve) => {
-    const enc = new TextEncoder();
-    const keyEnc = enc.encode(key);
-
     resolve(
       await crypto.subtle.importKey(
         "raw",
-        keyEnc,
+        new TextEncoder().encode(key),
         {
           name: "HMAC",
           hash: "SHA-256",
@@ -81,11 +77,15 @@ export const OTP = async (secret) => {
 
 export const OTPx = async (secret, timenow) => {
   return new Promise(async (resolve) => {
-    const secretKey = await hmacKey(secret);
-    const dataEnc = new TextEncoder().encode(await getTimex(timenow));
-    let output = await crypto.subtle.sign("HMAC", secretKey, dataEnc);
-    let outputHex = await BufferToHex(output);
-    resolve(outputHex);
+    resolve(
+      await BufferToHex(
+        await crypto.subtle.sign(
+          "HMAC",
+          await hmacKey(secret),
+          new TextEncoder().encode(await getTimex(timenow)),
+        ),
+      ),
+    );
   });
 };
 
