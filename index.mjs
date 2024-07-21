@@ -89,8 +89,19 @@ export const OTPx = async (secret, timenow) => {
   });
 };
 
-export const CheckOTP = async (otp, secret) => {
-  return await CheckOTPx(otp, secret, 5);
+export const CheckOTP = async (otp, secrets) => {
+  return await CheckOTPs(otp, secrets, 5);
+};
+
+export const CheckOTPs = async (otp, secrets, time1) => {
+  return new Promise(async (resolve) => {
+    for (s of secrets) {
+      if (await CheckOTPx(otp, s, time1)) {
+        resolve(true);
+      }
+    }
+    resolve(false);
+  });
 };
 
 export const CheckOTPx = async (otp, secret, time1) => {
