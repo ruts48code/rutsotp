@@ -8,5 +8,8 @@
   "description": "",
   "devDependencies": {
     "prettier": "3.3.3"
+  },
+  "dependencies": {
+    "crypto-random": "^2.0.1"
   }
 }

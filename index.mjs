@@ -1,6 +1,25 @@
+import random from 'crypto-random'
+
+export const randomInt = async (s) => {
+  return new Promise(async (resolve) => {
+    resolve(Math.floor(s * random.value()))
+  })
+}
+
+export const randomToken = async (s) => {
+  return new Promise(async (resolve) => {
+    const t = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let r = ''
+    for (let i = 0; i < s; i++) {
+      r += t[await randomInt(t.length)]
+    }
+    resolve(r)
+  })
+}
+
 export const getTimex = async (timenow) => {
   return new Promise(async (resolve) => {
-    resolve(Math.floor(timenow/1000).toString())
+    resolve(Math.floor(timenow / 1000).toString())
   });
 };
 
